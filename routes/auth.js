@@ -7,6 +7,7 @@ const ONE_DAY = 60 * 60 * 24
 
 // Register a new user
 router.post("/auth/register", async (req, res) => {
+	// Validate user's input
 	if (!req.body.email || !req.body.password || !req.body.name) {
 		res.status(500).json({
 			success: false,
@@ -14,6 +15,7 @@ router.post("/auth/register", async (req, res) => {
 		})
 	} else {
 		try {
+			// Check if email already exists
 			let foundUser = await User.findOne({ email: req.body.email })
 			if (foundUser) {
 				res.json({
@@ -50,6 +52,7 @@ router.post("/auth/register", async (req, res) => {
 
 // Login
 router.post("/auth/login", async (req, res) => {
+	// Validate user's input
 	if (!req.body.email || !req.body.password) {
 		res.status(500).json({
 			success: false,
@@ -57,6 +60,36 @@ router.post("/auth/login", async (req, res) => {
 		})
 	} else {
 		try {
+			const { email, password } = req.body
+			const foundUser = await User.findOne({ email }).select("+password")
+			if (!foundUser) {
+				res.status(403).json({
+					success: false,
+					message: "Email or password incorrect",
+				})
+			} else {
+				if (foundUser.comparePassword(password)) {
+					// Remove password from foundUser object
+					const user = {
+						name: foundUser.name,
+						_id: foundUser._id,
+						email: foundUser.email,
+						role: foundUser.role,
+					}
+					const token = jwt.sign(user, config.key, {
+						expiresIn: ONE_DAY,
+					})
+					res.json({
+						success: true,
+						token,
+					})
+				} else {
+					res.status(403).json({
+						success: false,
+						message: "Email or password incorrect",
+					})
+				}
+			}
 		} catch (error) {
 			res.status(500).json({
 				success: false,
