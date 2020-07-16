@@ -2,6 +2,7 @@ const router = require("express").Router()
 const User = require("../models/user")
 const jwt = require("jsonwebtoken")
 const config = require("../config/config")
+const verifyToken = require("../middlewares/verify-token")
 
 // Register a new user
 router.post("/auth/register", async (req, res) => {
@@ -26,8 +27,8 @@ router.post("/auth/register", async (req, res) => {
 			})
 
 			res.json({
-				token,
 				success: true,
+				token,
 				message: "User registered",
 			})
 		} catch (error) {
@@ -36,6 +37,25 @@ router.post("/auth/register", async (req, res) => {
 				message: error.message,
 			})
 		}
+	}
+})
+
+// User profile route
+router.get("/auth/user", verifyToken, async (req, res) => {
+	try {
+		let user = await User.findOne({ _id: req.decodedToken._id })
+		if (user) {
+			res.json({
+				success: true,
+				user,
+				message: "User found",
+			})
+		}
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: error.message,
+		})
 	}
 })
 
