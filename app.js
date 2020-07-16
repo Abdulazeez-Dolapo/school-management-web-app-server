@@ -4,6 +4,7 @@ const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
 const cors = require("cors")
 const config = require("./config/config")
+const authRoute = require("./routes/auth")
 
 const app = express()
 
@@ -11,6 +12,9 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+// Routes
+app.use("/api", authRoute)
 
 // Connect to database
 mongoose.connect(
@@ -23,10 +27,9 @@ mongoose.connect(
 	},
 	err => {
 		if (err) {
-			// console.log(config)
 			console.log(err)
 		} else {
-			console.log("Database connected...")
+			console.log("Database connected")
 		}
 	}
 )
@@ -34,5 +37,5 @@ mongoose.connect(
 const PORT = config.port || 4000
 
 app.listen(PORT, () => {
-	console.log(`Server running on port ${PORT} ...`)
+	console.log(`Server running on port ${PORT}`)
 })
