@@ -7,7 +7,6 @@ const UserSchema = new Schema({
 	email: { type: String, required: true, unique: true },
 	password: { type: String, required: true, select: false },
 	role: { type: String, required: true },
-	courseRegistered: [String],
 })
 
 UserSchema.pre("save", function (next) {
