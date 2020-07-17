@@ -1,4 +1,5 @@
 const Course = require("../models/course")
+const checkUser = require("../utils/checkUser")
 
 class courseController {
 	// Create course
@@ -79,21 +80,32 @@ class courseController {
 	// Update a course
 	static async update(req, res) {
 		try {
-			let updatedCourse = await Course.findOneAndUpdate(
-				{ _id: req.params.id },
-				{
-					$set: {
-						title: req.body.title,
-						description: req.body.description,
-						price: req.body.price,
-					},
-				},
-				{ upsert: true }
+			const isUserAuthenticated = await checkUser(
+				req.decodedToken._id,
+				req.params.id
 			)
-			res.json({
-				success: true,
-				message: "Course updated",
-			})
+			if (isUserAuthenticated) {
+				let updatedCourse = await Course.findOneAndUpdate(
+					{ _id: req.params.id },
+					{
+						$set: {
+							title: req.body.title,
+							description: req.body.description,
+							price: req.body.price,
+						},
+					},
+					{ upsert: true }
+				)
+				res.json({
+					success: true,
+					message: "Course updated",
+				})
+			} else {
+				res.status(401).json({
+					success: false,
+					message: "You do not have permission to update this course",
+				})
+			}
 		} catch (error) {
 			res.status(500).json({
 				success: false,
@@ -105,15 +117,21 @@ class courseController {
 	// Delete a course
 	static async delete(req, res) {
 		try {
-			let deletedCourse = await Course.findOneAndDelete({
-				_id: req.params.id,
-			})
-
-			if (deletedCourse) {
-				res.json({
-					success: true,
-					message: "Course deleted",
+			const isUserAuthenticated = await checkUser(
+				req.decodedToken._id,
+				req.params.id
+			)
+			if (isUserAuthenticated) {
+				let deletedCourse = await Course.findOneAndDelete({
+					_id: req.params.id,
 				})
+
+				if (deletedCourse) {
+					res.json({
+						success: true,
+						message: "Course deleted",
+					})
+				}
 			}
 		} catch (error) {
 			res.status(500).json({
