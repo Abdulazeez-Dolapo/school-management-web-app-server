@@ -10,4 +10,11 @@ router.post(
 	courseRegistrationController.register
 )
 
+// Cancel course registration
+router.delete(
+	"/course/registration/cancel/:id",
+	[verifyToken, verifyStudent],
+	courseRegistrationController.cancel
+)
+
 module.exports = router

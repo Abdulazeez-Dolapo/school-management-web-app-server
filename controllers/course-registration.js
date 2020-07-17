@@ -18,6 +18,7 @@ class courseRegistrationController {
 				await registeredCourse.save()
 
 				res.json({
+					registeredCourse,
 					success: true,
 					message: "Registered for course",
 				})
@@ -27,6 +28,27 @@ class courseRegistrationController {
 					message: error.message,
 				})
 			}
+		}
+	}
+
+	// Cancel course registration
+	static async cancel(req, res) {
+		try {
+			const deletedCourse = await CourseRegistration.findOneAndDelete({
+				_id: req.params.id,
+			})
+
+			if (deletedCourse) {
+				res.json({
+					success: true,
+					message: "Course registration canceled",
+				})
+			}
+		} catch (error) {
+			res.status(500).json({
+				success: false,
+				message: error.message,
+			})
 		}
 	}
 }
