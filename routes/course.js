@@ -11,6 +11,9 @@ router.post(
 )
 
 // Get all courses
-router.get("/course/get-all-courses", courseController.getCourse)
+router.get("/course/get-all-courses", courseController.getCourses)
+
+// Get a single courses
+router.get("/course/get-course/:id", courseController.getCourse)
 
 module.exports = router

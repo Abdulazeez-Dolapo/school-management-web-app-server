@@ -43,7 +43,7 @@ class courseController {
 	}
 
 	// Get all courses
-	static async getCourse(req, res) {
+	static async getCourses(req, res) {
 		try {
 			const courses = await Course.find()
 			res.json({
@@ -60,76 +60,24 @@ class courseController {
 	}
 
 	// Get a single course
-
+	static async getCourse(req, res) {
+		try {
+			let course = await Course.findOne({ _id: req.params.id })
+			res.json({
+				success: true,
+				course,
+				message: "Course found",
+			})
+		} catch (error) {
+			res.status(500).json({
+				success: false,
+				message: error.message,
+			})
+		}
+	}
 	// Update a course
 
 	// Delete a course
-
-	// // Get a single product
-	// router.get("/product/:id", async (req, res) => {
-	// 	try {
-	// 		let product = await Product.findOne({ _id: req.params.id })
-	// 		res.json({
-	// 			success: true,
-	// 			product,
-	// 		})
-	// 	} catch (error) {
-	// 		res.status(500).json({
-	// 			success: false,
-	// 			message: error.message,
-	// 		})
-	// 	}
-	// })
-
-	// // Update a product
-	// router.put("/product/:id", upload.single("photo"), async (req, res) => {
-	// 	try {
-	// 		let updatedProduct = await Product.findOneAndUpdate(
-	// 			{ _id: req.params.id },
-	// 			{
-	// 				$set: {
-	// 					title: req.body.title,
-	// 					description: req.body.description,
-	// 					photo: req.file.location,
-	// 					price: req.body.price,
-	// 					owner: req.body.ownerID,
-	// 					category: req.body.categoryID,
-	// 				},
-	// 			},
-	// 			{ upsert: true }
-	// 		)
-	// 		res.json({
-	// 			success: true,
-	// 			product: updatedProduct,
-	// 		})
-	// 	} catch (error) {
-	// 		res.status(500).json({
-	// 			success: false,
-	// 			message: error.message,
-	// 		})
-	// 	}
-	// })
-
-	// // Delete a product
-	// router.delete("/product/:id", async (req, res) => {
-	// 	try {
-	// 		let deletedProduct = await Product.findOneAndDelete({
-	// 			_id: req.params.id,
-	// 		})
-
-	// 		if (deletedProduct) {
-	// 			res.json({
-	// 				success: true,
-	// 				message: "Product successfully deleted",
-	// 			})
-	// 		}
-	// 	} catch (error) {
-	// 		res.status(500).json({
-	// 			success: false,
-	// 			message: error.message,
-	// 		})
-	// 	}
-	// })
 }
 
 module.exports = courseController
