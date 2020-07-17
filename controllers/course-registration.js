@@ -11,6 +11,19 @@ class courseRegistrationController {
 			})
 		} else {
 			try {
+				// Check if user has already registered for a particular course
+				let course = await CourseRegistration.findOne({
+					userId: req.body.userId,
+					courseId: req.body.courseId,
+				})
+
+				if (course) {
+					return res.status(500).json({
+						success: false,
+						message: "You have already registered for this course",
+					})
+				}
+
 				let registeredCourse = new CourseRegistration()
 				registeredCourse.userId = req.body.userId
 				registeredCourse.courseId = req.body.courseId
@@ -44,6 +57,25 @@ class courseRegistrationController {
 					message: "Course registration canceled",
 				})
 			}
+		} catch (error) {
+			res.status(500).json({
+				success: false,
+				message: error.message,
+			})
+		}
+	}
+
+	// Get all courses a user has registered under
+	static async getAll(req, res) {
+		try {
+			let course = await CourseRegistration.find({
+				userId: req.decodedToken._id,
+			})
+			res.json({
+				success: true,
+				course,
+				message: "Course(s) found",
+			})
 		} catch (error) {
 			res.status(500).json({
 				success: false,

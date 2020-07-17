@@ -17,4 +17,11 @@ router.delete(
 	courseRegistrationController.cancel
 )
 
+// Get all courses a user is registered under
+router.get(
+	"/course/registration/get-all-courses-registered",
+	[verifyToken, verifyStudent],
+	courseRegistrationController.getAll
+)
+
 module.exports = router
