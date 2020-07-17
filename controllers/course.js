@@ -103,6 +103,25 @@ class courseController {
 	}
 
 	// Delete a course
+	static async delete(req, res) {
+		try {
+			let deletedCourse = await Course.findOneAndDelete({
+				_id: req.params.id,
+			})
+
+			if (deletedCourse) {
+				res.json({
+					success: true,
+					message: "Course deleted",
+				})
+			}
+		} catch (error) {
+			res.status(500).json({
+				success: false,
+				message: error.message,
+			})
+		}
+	}
 }
 
 module.exports = courseController

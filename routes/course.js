@@ -23,4 +23,11 @@ router.put(
 	courseController.update
 )
 
+// Delete a course
+router.delete(
+	"/course/delete/:id",
+	[verifyToken, verifyTutor],
+	courseController.delete
+)
+
 module.exports = router
