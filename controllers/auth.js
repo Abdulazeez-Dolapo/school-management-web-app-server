@@ -10,7 +10,7 @@ class AuthController {
 		if (!req.body.email || !req.body.password || !req.body.name) {
 			res.status(500).json({
 				success: false,
-				message: "Please enter valid email, name or password",
+				message: "Please enter valid email, username or password",
 			})
 		} else {
 			try {

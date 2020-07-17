@@ -5,6 +5,7 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 const config = require("./config/config")
 const authRoute = require("./routes/auth")
+const courseRoute = require("./routes/course")
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json())
 
 // Routes
 app.use("/api", authRoute)
+app.use("/api", courseRoute)
 
 // Connect to database
 mongoose.connect(
