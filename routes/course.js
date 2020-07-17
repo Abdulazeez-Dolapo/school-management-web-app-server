@@ -10,4 +10,7 @@ router.post(
 	courseController.create
 )
 
+// Get all courses
+router.get("/course/get-all-courses", courseController.getCourse)
+
 module.exports = router
