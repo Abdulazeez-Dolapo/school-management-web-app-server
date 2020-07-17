@@ -75,7 +75,32 @@ class courseController {
 			})
 		}
 	}
+
 	// Update a course
+	static async update(req, res) {
+		try {
+			let updatedCourse = await Course.findOneAndUpdate(
+				{ _id: req.params.id },
+				{
+					$set: {
+						title: req.body.title,
+						description: req.body.description,
+						price: req.body.price,
+					},
+				},
+				{ upsert: true }
+			)
+			res.json({
+				success: true,
+				message: "Course updated",
+			})
+		} catch (error) {
+			res.status(500).json({
+				success: false,
+				message: error.message,
+			})
+		}
+	}
 
 	// Delete a course
 }
