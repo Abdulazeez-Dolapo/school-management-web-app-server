@@ -1,4 +1,5 @@
 const Course = require("../models/course")
+const CourseRegistration = require("../models/course-registration")
 const checkUser = require("../utils/checkUser")
 
 class courseController {
@@ -46,7 +47,7 @@ class courseController {
 	// Get all courses
 	static async getCourses(req, res) {
 		try {
-			const courses = await Course.find()
+			const courses = await Course.find().populate("creator").exec()
 			res.json({
 				success: true,
 				courses,
@@ -64,6 +65,8 @@ class courseController {
 	static async getCourse(req, res) {
 		try {
 			let course = await Course.findOne({ _id: req.params.id })
+				.populate("creator")
+				.exec()
 			res.json({
 				success: true,
 				course,
@@ -125,6 +128,9 @@ class courseController {
 				let deletedCourse = await Course.findOneAndDelete({
 					_id: req.params.id,
 				})
+
+				// Delete all registrations for the course
+				await CourseRegistration.deleteMany({ courseId: req.params.id })
 
 				if (deletedCourse) {
 					res.json({
