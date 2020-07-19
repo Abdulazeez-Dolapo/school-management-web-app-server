@@ -72,7 +72,7 @@ class courseRegistrationController {
 			let courses = await CourseRegistration.find({
 				userId: req.decodedToken._id,
 			})
-				.populate("courseId")
+				.deepPopulate("courseId.creator")
 				.exec()
 			res.json({
 				success: true,
@@ -93,6 +93,8 @@ class courseRegistrationController {
 			let courses = await Course.find({
 				creator: req.decodedToken._id,
 			})
+				.populate("creator")
+				.exec()
 			res.json({
 				success: true,
 				courses,

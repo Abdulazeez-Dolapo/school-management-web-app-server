@@ -81,7 +81,6 @@ class AuthController {
 						res.json({
 							success: true,
 							token,
-							user,
 						})
 					} else {
 						res.status(403).json({
