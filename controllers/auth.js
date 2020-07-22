@@ -17,7 +17,7 @@ class AuthController {
 				// Check if email already exists
 				let foundUser = await User.findOne({ email: req.body.email })
 				if (foundUser) {
-					res.json({
+					return res.status(400).json({
 						success: false,
 						message: "User with the email already exists",
 					})
